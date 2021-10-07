@@ -1,0 +1,10 @@
+baltdata <- df2[df2$fips=="24510", ]
+baltYrEmm <- aggregate(Emissions ~ year, baltdata, sum)
+
+png("Project Plot 2.png")
+
+barplot(height=baltYrEmm$Emissions/1000, names.arg=baltYrEmm$year, xlab="Year", 
+        ylab=expression('Aggregated Emission'),main=expression('Baltimore Aggregated PM'[2.5]*' Emmissions by Year')
+        )
+
+dev.off()
