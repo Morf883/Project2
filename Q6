@@ -1,0 +1,22 @@
+df1 <- data.table::as.data.table(x = readRDS(file = "Source_Classification_Code.rds"))
+df2 <- data.table::as.data.table(x = readRDS(file = "summarySCC_PM25.rds"))
+
+baltYrTypEmmFips <- summarise(group_by(filter(df2, fips == "24510"& type == 'ON-ROAD'), year), Emissions=sum(Emissions))
+laYrTypEmmFips <- summarise(group_by(filter(df2, fips == "06037"& type == 'ON-ROAD'), year), Emissions=sum(Emissions))
+
+baltYrTypEmmFips$County <- "Baltimore City"
+laYrTypEmmFips$County <- "Los Angeles"
+
+baltLaEmissions <- rbind(baltYrTypEmmFips, laYrTypEmmFips)
+
+png(" Project plot6.png")
+
+ggplot(baltLaEmissions, aes(x=factor(year), y=Emissions, fill=County,label = round(Emissions,2))) +
+  geom_bar(stat="identity") + 
+  facet_grid(County~., scales="free") +
+  ylab(expression("total PM"[2.5]*" emissions in tons")) + 
+  xlab("year") +
+  ggtitle(expression("Motor vehicle emission variation in Baltimore and Los Angeles in tons"))+
+  geom_label(aes(fill = County),colour = "white", fontface = "bold")
+
+dev.off()
