@@ -1,0 +1,15 @@
+df1 <- data.table::as.data.table(x = readRDS(file = "Source_Classification_Code.rds"))
+df2 <- data.table::as.data.table(x = readRDS(file = "summarySCC_PM25.rds"))
+
+baltdata <- df2[df2$fips=="24510", ]
+baltYrEmm <- aggregate(Emissions ~ year, baltdata, sum)
+baltYrTypEmm <- aggregate(Emissions ~ year+ type, baltdata, sum)
+
+png(" Project plot4.png")
+
+ggplot(baltYrTypEmm, aes(factor(year), Emissions)) + geom_bar(stat="identity") +
+  xlab("year") +  
+  ylab(expression('Total Emissions')) +
+  ggtitle('Total [2.5]* Coal Emissions(1999- 2008)')
+
+dev.off()
