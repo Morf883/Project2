@@ -1,0 +1,15 @@
+df1 <- data.table::as.data.table(x = readRDS(file = "Source_Classification_Code.rds"))
+df2 <- data.table::as.data.table(x = readRDS(file = "summarySCC_PM25.rds"))
+
+baltdata <- df2[df2$fips=="24510", ]
+baltYrEmm <- aggregate(Emissions ~ year, baltdata, sum)
+
+png("Project Plot 3.png")
+
+ggplot(baltdata,aes(factor(year),Emissions,fill=type)) +
+  geom_bar(stat="identity") +
+  facet_grid(.~type,scales = "free",space="free") + 
+  labs(x="year", y=expression("Total PM"[2.5]*" Emission (Tons)")) + 
+  labs(title=expression("PM"[2.5]*" Baltimore City Emmissions (1999-2008)"))
+
+dev.off()
